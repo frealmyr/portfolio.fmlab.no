@@ -1,5 +1,3 @@
-Git for my personal homepage at fmlab.no
+Git for my personal homepage at fmlab.no, where i will share photos that i've taken and edited.
 
-This project is also an exercise in creating a full stack website using Nginx, MySQL and the Flask framework.
-
-I'm currently in the initial brainstorming and learning phase, expecting to pick this up as i learn more about Flask.
+This project is also an exercise in creating a fully functional protofolio website using Nginx, MySQL and PHP.
