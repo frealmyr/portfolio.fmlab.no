@@ -2,11 +2,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  
   }
   .gallery img{
       margin: 5px;
-      transition: all 0.3s;
+      width: 400px;
+      
   }
   .gallery img:hover{
-      transform: scale(1.01)
+      transform: scale(1.04)
   }
