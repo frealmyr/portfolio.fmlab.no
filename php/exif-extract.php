@@ -5,6 +5,7 @@
     Script is based on the EXIF 2.3 standard.   */
 
 $exif = exif_read_data($file, 0, true);
+$altitude = 'NULL'; // TODO: Fix NULL object to MySQL NULL string.
 
 // Data is stored within a array, so we loop the contents and store it to variables.
 foreach ($exif as $key => $section) {
@@ -13,80 +14,103 @@ foreach ($exif as $key => $section) {
         // echo "$key.$name: $val<br />\n"; /* Uncomment this line to list all parameters in EXIF. */
 
         if ($name == 'Make') {
-            $make = $val; // Manufactor of the camera.
+            // Manufactor of the camera. (VARCHAR(15))
+            $make = $val;
        
         } elseif ($name == 'Model') {
-            $device = $val; // Model number of the camera.
+            // Model number of the camera. (VARCHAR(25))
+            $model = $val; 
         
         } elseif ($name == 'UndefinedTag:0xA434') {
-            $lens = $val; // This undified tag is the product name of the lens.
+            // This undified tag is the product name of the lens. (VARCHAR(45))
+            $lens = $val; 
         
         } elseif ($name == 'ExposureProgram') {
-            $program = $val; // Stores as an integer, use MySQL to fetch the description.
+            // Used exposure program, type can be fetched from DB (INT)
+            $expoprog = $val;
         
         } elseif ($name == 'FNumber') {
+            // F stop number used (INT)
             $fnumcalc = explode("/", $val); // Splitting string into two fields, so that we can divide.
             $fnumber = ($fnumcalc[0] / $fnumcalc[1]); // We need to divide the first number by the second one.
         
         } elseif ($name == 'ExposureTime') {
+            // Exposure time used (VARCHAR(6))
             $extimecalc = explode("/", $val);
             if ($extimecalc[1] == 1) {
                 $exposuretime = $extimecalc[0]; // If exposure time is over 1sec, we don't need to show /1 after the integer.
             } else {
-                $exposuretime = $val; // If the exposure time is under 1 sec, show the full string.
+                $expotime = $val; // If the exposure time is under 1 sec, show the full string.
             }
             
         } elseif ($name == 'ISOSpeedRatings') {
-            $isospeed = $val; // Stores used ISO as an integer.
+            // ISO (INT)
+            $iso = $val;
         
         } elseif ($name == 'FocalLength') {
+            // Focallenght of the lens (FLOAT)
             $flcalc = explode("/", $val);
             $focallenght = ($flcalc[0] / $flcalc[1]); // Divides by /1 for compability, in case a manufactor uses something custom in this parameter.
             $focallenght35mm = ($focallenght * 1.5); // States the crop factor for APS-C sensors.
         
         } elseif ($name == 'MeteringMode') {
-            $meteringmode = $val; // Stores as an integer, use MySQL to fetch the description.
+            // Metering mode used, fetch type from DB (INT)
+            $metermode = $val;
         
         } elseif ($name == 'DateTimeOriginal') {
+            // Date the original was taken (DATETIME)
             $dateoriginal = strtotime($val); // Converting from str to unixtime
             //$dateoriginal = date('Y-m-d H:i:s', $dateoriginal); // Formatting the datetime for use with MySQL
         
         } elseif ($name == 'DateTime') {
+            // Last edit date (DATETIME)
             $dateedited = strtotime($val); // Converting from str to unixtime
             //$dateedited = date('Y-m-d H:i:s', $dateedited); // Formatting the datetime for use with MySQL
         
         } elseif ($name == 'Height') {
+            // Height in pixels, not used by the DB see variable "$resolution"
             $height = $val;
         
         } elseif ($name == 'Width') {
+            // Width in pixels, not used by the DB see variable "$resolution"
             $width = $val;
         
         } elseif ($name == 'BrightnessValue') {
+            // Brightness value reported from camera (FLOAT)
             $bvcalc = explode("/", $val);
-            $brightnessvalue = ($bvcalc[0] / $bvcalc[1]);            
+            $brightness = ($bvcalc[0] / $bvcalc[1]);            
         
         } elseif ($name == 'ExposureBiasValue') {
+            // Outputs the bias or EV that was used during capture. (FLOAT)
             $exbiascalc = explode("/", $val);
-            $exposurebiasvalue = ($exbiascalc[0] / $exbiascalc[1]); // Outputs the bias or EV that was used during capture.
+            $exposurebias = ($exbiascalc[0] / $exbiascalc[1]);
         
         } elseif ($name == 'ImageDescription') {
-            $imagedescription = $val; // Desc from lightroom etc, used to populate textarea if something is written.
+            // Desc from lightroom etc, used to populate textarea if something is written. (TXT)
+            $exifdescription = $val;
         
         } elseif ($name == 'GPSAltitude') {
+            // The altitude. (FLOAT)
             $alticalc = explode("/", $val);
-            $gpsaltitude = ($alticalc[0] / $alticalc[1]); // Stores the altitude as a float variable.
-        
+            $altitude = ($alticalc[0] / $alticalc[1]); 
+                    
         } elseif ($name == 'Software') {
+            // Software used. (VARCHAR(45))
             $software = $val;
         
         } elseif ($name == 'ExposureMode') {
-            $exposuremode = $val; // Stores as an integer, use MySQL to fetch the description.
+            // Selected exposure mode, type can be fetched from DB (INT)
+            $exposuremode = $val;
         
         } elseif ($name == 'LightSource') {
-            $lightsource = $val; // Stores as an integer, use MySQL to fetch the description.
+            // Selected whitebalance, type can be fetched from DB (INT)
+            $lightsource = $val;
         }
     }
 }
+
+// Combining width and height outside the loop, to be uploaded as string.
+$resolution = $width . "x" . $height;
 
 // GPS extraction from: https://stackoverflow.com/a/16437888
 // GPS data is stored in arrays within the array of the EXIF file.

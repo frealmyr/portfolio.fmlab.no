@@ -4,7 +4,7 @@
 <head>
     <!-- Description -->
     <meta charset="utf-8">
-    <title>FmLab</title>
+    <title>fmlab</title>
     <meta name="description" content="Personal Homesite">
     <meta name="author" content="Fredrick Myrvoll">
 
@@ -17,34 +17,29 @@
     <!-- Fonts -->
     <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-    <!-- CSS -->
+    <!-- CSS Skeleton Framework-->
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/gallery.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/general.css">
 
 </head>
 
 <body>
-    <div class="row">
-    <div class="eleven columns">
-            <h1>Hi, this is the FmLab homepage!</h1>
-            <p>This site is under active development. Come back later, where i will share
-                some photos and other cool stuff from this site. :)</p>
+<div id="topbar">
+    
+        <div id="logo">
+            <a href="https://fmlab.no">home</a>
+            <a href="gallery.php">gallery</a>
         </div>
-    </div>
+    </div>  
 
-    <div class="row">
-
-    <div class="gallery">
-    <?php
-        $files = glob('images/gallery/Small/*.{jpg,png,gif,JPG}', GLOB_BRACE);
-
-        foreach($files as $file) {
-            echo "<img src='$file'>";
-        }
-    ?>
-    </div></div></div>
-
+    <div class="frontpage">
+    <h3>Work-in-progress</h3>
+    <p>Currently working on a PHP/MySQL/Nginx gallery for my photography hobby.
+    <br>You can see the <a href="gallery.php">current state here</a> and the <a href="https://github.com/frealmyr/fmlab.no/tree/develop">current progress on github.</a></p>
+    <p>When i have a decent solution worked out, i'll dockerize the whole project for simplifying deployment.</p>
+</div>
 
 
 </body>

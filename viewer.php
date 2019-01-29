@@ -57,7 +57,7 @@
 
                     <div class=" sidebar description">
                         <h5>Description</h5>
-                        <p>Going for the ghostly water effect here. Requires some wind, be careful not to have elements in focus that moves too much since that makes it harder to merge HDR in LR.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis tempus turpis, sit amet iaculis urna pellentesque in. Donec ipsum purus, lacinia quis purus a, tristique ullamcorper diam. Vivamus sem dolor, mollis id venenatis a, convallis eu nisl. Nam tempus ut turpis vitae auctor. Nunc sed faucibus dolor.</p>
                         <br>
                     </div>
                     </div>
