@@ -10,6 +10,7 @@ services:
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: php
+
   apache:
     build:
       context: './apache/'
@@ -26,6 +27,7 @@ services:
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: apache
+
   mysql:
     image: mysql:${MYSQL_VERSION:-latest}
     restart: always
@@ -33,6 +35,7 @@ services:
       - "3306:3306"
     volumes:
             - data:/var/lib/mysql
+            - ./db:/docker-entrypoint-initdb.d
     networks:
       - backend
     environment:
@@ -41,8 +44,28 @@ services:
       MYSQL_USER: "${DB_USERNAME}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     container_name: mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: "${DB_ROOT_PASSWORD}"
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: "${DB_ROOT_PASSWORD}"
+      PMA_PORT: 3306
+
 networks:
   frontend:
   backend:
+
 volumes:
     data:
