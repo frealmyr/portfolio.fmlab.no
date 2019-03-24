@@ -36,7 +36,7 @@
 
     <div class="gallery">
     <?php
-	$dir = "images/gallery/*";
+	$dir = "/var/www/files/*";
 	foreach(glob($dir) as $file)
 	{
     	if(!is_dir($file)) { echo "<a href='viewer.php?file=$file'><img src='$file'></a>";}
