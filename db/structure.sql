@@ -16,6 +16,8 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 CREATE DATABASE IF NOT EXISTS portfolio;
+-- CREATE USER 'api'@'#' IDENTIFIED BY 'password';
+-- GRANT ALL PRIVILEGIES ON portfolio.* TO 'api'@'#';
 USE portfolio;
 
 --

@@ -1,38 +1,32 @@
 version: "3.2"
-services:
-  # Add traefik for load-balacing and Lets Encrypt certificate issuing.
-  # If you are running multiple containers from the same host, consider making this standalone.
-  traefik:
-    image: traefik:alpine
-    restart: always
-    command: --web -c /etc/traefik/traefik.toml --LOGLEVEL=debug
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker/traefik/traefik.toml:/etc/traefik/traefik.toml
-      - /acme
 
-  # Nginx as the web-server. (Static files)
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
+services:
+  # Web-server
   nginx:
     image: nginx:${NGINX_VERSION}
     networks:
-      - frontend
-      - backend
+      - web
+      - internal
     links:
       - php
     volumes:
-      - ${PUBLIC_HTML}/:/var/www/html/:ro
-      - ${PUBLIC_FILES}/:/var/www/files/:ro
+      - ${PUBLIC_HTML}/:/var/www/html/
+      - ${PUBLIC_FILES}/:/var/www/files/
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
     container_name: nginx
     labels:
-      - "traefik.enable=true"
-      - 'traefik.frontend.rule=Host:fmlab.no'
-      - "traefik.port=80"
+      - traefik.backend=nginx-webserver
+      - traefik.frontend.rule=Host:${HOSTNAME}
+      - traefik.docker.network=web
+      - traefik.port=80
   
   # PHP-FPM for Nginx
   php:
@@ -41,21 +35,23 @@ services:
       args:
         PHP_VERSION: ${PHP_VERSION}
     networks:
-      - backend
+      - internal
     volumes:
-      - ${PUBLIC_HTML}/:/var/www/html/:ro
-      - ${PUBLIC_FILES}/:/var/www/files/:rw
+      - ${PUBLIC_HTML}/:/var/www/html/
+      - ${PUBLIC_FILES}/:/var/www/files/
     environment: 
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     container_name: php
+    labels:
+      - traefik.enable=false
 
   # MySQL 
   mysql:
     image: mysql:${MYSQL_VERSION:-latest}
     restart: always
     networks:
-      - backend
+      - internal
     depends_on: 
       - php
     volumes:
@@ -67,6 +63,8 @@ services:
       MYSQL_USER: "${DB_USERNAME}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     container_name: mysql
+    labels:
+      - traefik.enable=false
 
   # Temp MySQL console (For development purposes only)
   # phpmyadmin:
@@ -86,10 +84,6 @@ services:
   #     PMA_USER: root
   #     PMA_PASSWORD: "${DB_ROOT_PASSWORD}"
   #     PMA_PORT: 3306
-
-networks:
-  frontend:
-  backend:
 
 volumes:
     data:

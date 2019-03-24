@@ -10,7 +10,7 @@ foreach ($exif as $key => $section) {
 
         if ($name == 'Make') {
             $make = $val; // Manufactor of the camera.
-       
+
         } elseif ($name == 'Model') {
             $device = $val; // Model number of the camera.
         
