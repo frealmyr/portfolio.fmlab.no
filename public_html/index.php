@@ -29,18 +29,31 @@
 <body>
     <div id="topbar">
         <div id="logo">
-            <a href="https://fmlab.no">home</a>
-            <a href="upload.php">upload</a>
+            <a href="https://portfolio.fmlab.no">home</a>
+            <!-- <a href="upload.php">upload</a> -->
         </div>
     </div>  
 
     <div class="gallery">
     <?php
-	$dir = "/var/www/files/*";
-	foreach(glob($dir) as $file)
-	{
-    	if(!is_dir($file)) { echo "<a href='viewer.php?file=$file'><img src='$file'></a>";}
-	}
+
+    $sorted_keys = array();
+    $dir_iterator = new DirectoryIterator('./images/gallery/');
+    foreach ($dir_iterator as $fileinfo) {
+        if ($fileinfo->isFile()) {
+            $sorted_keys[$fileinfo->getMTime()] = $fileinfo->key();
+        }
+    }
+    
+    ksort($sorted_keys);
+
+    foreach ($sorted_keys as $key) {
+        $dir_iterator->seek($key);
+        $fileinfo = $dir_iterator->current();
+
+        $image = $fileinfo->getFilename();
+        echo "<a href='viewer.php?file=images/gallery/$image'><img src='images/gallery/small/$image'></a>";
+    }
 
 
     ?>

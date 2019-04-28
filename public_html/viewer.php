@@ -28,8 +28,8 @@
 <body>
 <div id="topbar">
         <div id="logo">
-            <a href="https://fmlab.no">home</a>
-            <a href="upload.php">upload</a>
+            <a href="https://portfolio.fmlab.no">home</a>
+            <!-- <a href="upload.php">upload</a> -->
         </div>
     </div>  
 
@@ -48,7 +48,7 @@
                 <div class="sidebar">
                     <div class="exif">
                     <br>
-                        <?php include "exiftest.php"
+                        <?php include "exif.php"
                         ?>
                         
                     </div><br>
