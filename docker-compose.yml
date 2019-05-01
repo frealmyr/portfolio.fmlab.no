@@ -2,12 +2,11 @@ version: "3.2"
                                                                                                                                                                                                                
 networks:                                                                                                                                                                                                      
   web:                                                                                                                                                                                                         
-    external: true                                                                                                                                                                                             
+    external: true    # Traefik reverse proxy network                                                                                                                                                                                           
   internal:                                                                                                                                                                                                    
-    external: false                                                                                                                                                                                            
+    external: false   # Internal only network for PHP-FPM                                                                                                                                                                                      
                                                                                                                                                                                                                
-services:                                                                                                                                                                                                      
-  # Web-server                                                                                                                                                                                                 
+services:                                                                                                                                                                                                                                                                                                                                                                                                      
   nginx:                                                                                                                                                                                                       
     image: nginx:${NGINX_VERSION}                                                                                                                                                                              
     networks:                                                                                                                                                                                                  
@@ -27,8 +26,7 @@ services:
       - traefik.frontend.rule=Host:portfolio.fmlab.no                                                                                                                                                          
       - traefik.docker.network=web                                                                                                                                                                             
       - traefik.port=80                                                                                                                                                                                        
-                                                                                                                                                                                                               
-  # PHP-FPM for Nginx                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                       
   php:                                                                                                                                                                                                         
     build:                                                                                                                                                                                                     
       context: './docker/php'                                                                                                                                                                                  
@@ -41,6 +39,3 @@ services:
     container_name: php
     labels:
       - traefik.enable=false
-
-volumes:
-    data:
