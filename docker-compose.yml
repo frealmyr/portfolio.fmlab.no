@@ -1,0 +1,41 @@
+version: "3.2"                                                                                                                                                                                                 
+                                                                                                                                                                                                               
+networks:                                                                                                                                                                                                      
+  web:                                                                                                                                                                                                         
+    external: true    # Traefik reverse proxy network                                                                                                                                                                                           
+  internal:                                                                                                                                                                                                    
+    external: false   # Internal only network for PHP-FPM                                                                                                                                                                                      
+                                                                                                                                                                                                               
+services:                                                                                                                                                                                                                                                                                                                                                                                                      
+  nginx:                                                                                                                                                                                                       
+    image: nginx:${NGINX_VERSION}                                                                                                                                                                              
+    networks:                                                                                                                                                                                                  
+      - web                                                                                                                                                                                                    
+      - internal                                                                                                                                                                                               
+    links:                                                                                                                                                                                                     
+      - php                                                                                                                                                                                                    
+    volumes:                                                                                                                                                                                                   
+      - ${PUBLIC_HTML}/:/var/www/html/                                                                                                                                                                         
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf                                                                                                                                             
+    depends_on:                                                                                                                                                                                                
+      - php                                                                                                                                                                                                    
+    container_name: nginx                                                                                                                                                                                  
+    labels:                                                                                                                                                                                                    
+      - traefik.enable=true                                                                                                                                                                                    
+      - traefik.backend=portfolio                                                                                                                                                                              
+      - traefik.frontend.rule=Host:portfolio.fmlab.no                                                                                                                                                          
+      - traefik.docker.network=web                                                                                                                                                                             
+      - traefik.port=80                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                       
+  php:                                                                                                                                                                                                         
+    build:                                                                                                                                                                                                     
+      context: './docker/php'                                                                                                                                                                                  
+      args:                                                                                                                                                                                                    
+        PHP_VERSION: ${PHP_VERSION}
+    networks:
+      - internal
+    volumes:
+      - ${PUBLIC_HTML}/:/var/www/html/
+    container_name: php
+    labels:
+      - traefik.enable=false
