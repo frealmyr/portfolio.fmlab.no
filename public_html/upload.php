@@ -2,27 +2,16 @@
 <html lang="en">
 
 <head>
-    <!-- Description -->
+    <title>FmLab</title>
     <meta charset="utf-8">
-    <title>fmlab</title>
-    <meta name="description" content="Personal Homesite">
     <meta name="author" content="Fredrick Myrvoll">
+    <meta name="description" content="Portfolio">
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png">
-
-    <!-- Mobile viewport Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Fonts -->
-    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
-    <!-- CSS Skeleton Framework-->
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/general.css">
-
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/gallery.css">
 </head>
 
 <body>
